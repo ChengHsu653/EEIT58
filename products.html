@@ -173,6 +173,18 @@
             </span>
           </div>
         </div>
+
+            <div class="container py-4" style="background-color: #f6aa1c; width: 100%">
+              <div class="d-flex flex-row bd-highlight">
+                <div class="p-2 bd-highlight" >
+                  <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+                </div>
+                <div class="p-2 bd-highlight">
+                  <button class="btn btn-outline-success" onclick="keysearch()">Search</button>
+                </div>
+              </div>
+            </div>
+
       </div>
 
       <!-- 讀取圖示 -->
@@ -228,6 +240,18 @@
       var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
       })
+
+      function keysearch() {
+        const searchValue = document.querySelector('input[type="search"]').value;
+        $.ajax({
+          type: 'GET',
+          url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
+          success: function (response) {
+            console.log(response)
+            setProduct(response)
+          },
+        })
+      }
     </script>
   </body>
 </html>
