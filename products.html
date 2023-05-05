@@ -269,6 +269,9 @@
         return new bootstrap.Popover(popoverTriggerEl)
     })
 
+    //底部位置
+    const bottomElement = document.documentElement;
+
     function keysearch() {
         const searchValue = document.querySelector('input[type="search"]').value;
         $.ajax({
@@ -277,6 +280,7 @@
             success: function (response) {
                 console.log(response)
                 setProduct(response)
+                bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
             },
         })
     }
@@ -288,6 +292,7 @@
             success: function (response) {
                 console.log(response)
                 setProduct(response)
+                bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
             },
         })
     }
@@ -300,14 +305,19 @@
         }
     });
 
-
+    //抓取下拉式選單的值
     const dropdownItems = document.querySelectorAll('.dropdown-item');
     dropdownItems.forEach((item) => {
         item.addEventListener('click', (event) => {
             const value = event.target.getAttribute('data-value');
             categorysearch(value);
+
         });
     });
+
+
+
+
 </script>
 </body>
 </html>
