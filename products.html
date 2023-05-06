@@ -184,32 +184,25 @@
                 <div class="p-2 bd-highlight">
                     <button class="btn btn-outline-success" onclick="keysearch()">Search</button>
                 </div>
-<!--                <div class="p-2 dropdown">-->
-<!--                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">-->
 <!--                        依分類搜索-->
-<!--                    </a>-->
-<!--                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">-->
-<!--                        <li><a class="dropdown-item" href="#">MMORPG</a></li>-->
-<!--                        <li><a class="dropdown-item" href="#">生存</a></li>-->
-<!--                        <li><a class="dropdown-item" href="#">射擊</a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
+
                 <div class="p-2 dropdown">
                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         依分類搜索
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" href="#" data-value="SURVIVAL">生存</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="FPS">射擊</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="GAME_THEORY">博弈</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="LEISURE">休閒</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="FANTASY">奇幻</a></li>
-                        <li><a class="dropdown-item" href="#" data-value="RHYTHM_GAME">音樂遊戲</a></li>
+                        <li><a class="dropdown-item" data-value="SURVIVAL">生存</a></li>
+                        <li><a class="dropdown-item" data-value="FPS">射擊</a></li>
+                        <li><a class="dropdown-item" data-value="GAME_THEORY">博弈</a></li>
+                        <li><a class="dropdown-item" data-value="LEISURE">休閒</a></li>
+                        <li><a class="dropdown-item" data-value="FANTASY">奇幻</a></li>
+                        <li><a class="dropdown-item" data-value="RHYTHM_GAME">音樂遊戲</a></li>
                     </ul>
                 </div>
 
             </div>
         </div>
+        <!--                        依分類搜索-->
         <!--        新增搜尋列表-->
 
 
@@ -274,13 +267,15 @@
 
     function keysearch() {
         const searchValue = document.querySelector('input[type="search"]').value;
+        console.log(searchValue)
         $.ajax({
             type: 'GET',
             url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
             success: function (response) {
                 console.log(response)
-                document.querySelector('input[type="search"]').value = '';
                 setProduct(response)
+                setPages(response)
+                document.querySelector('input[type="search"]').value = '';
                 bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
             },
         })
@@ -289,14 +284,16 @@
     // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
     function categorysearch(category){
         const searchValue = document.querySelector('input[type="search"]').value
-        if ( searchValue != ''){
+        console.log(searchValue)
+        if ( searchValue !== ''){
             $.ajax({
                 type: 'GET',
                 url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
                 success: function (response) {
                     console.log(response)
-                    document.querySelector('input[type="search"]').value = '';
                     setProduct(response)
+                    setPages(response)
+                    document.querySelector('input[type="search"]').value = '';
                     bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
                 },
             })
@@ -306,8 +303,9 @@
                 url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
                 success: function (response) {
                     console.log(response)
-                    document.querySelector('input[type="search"]').value = '';
                     setProduct(response)
+                    setPages(response)
+                    document.querySelector('input[type="search"]').value = '';
                     bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
                 },
             })
