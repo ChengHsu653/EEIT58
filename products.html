@@ -279,22 +279,39 @@
             url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
             success: function (response) {
                 console.log(response)
+                document.querySelector('input[type="search"]').value = '';
                 setProduct(response)
                 bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
             },
         })
     }
 
+    // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
     function categorysearch(category){
-        $.ajax({
-            type: 'GET',
-            url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
-            success: function (response) {
-                console.log(response)
-                setProduct(response)
-                bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
-            },
-        })
+        const searchValue = document.querySelector('input[type="search"]').value
+        if ( searchValue != ''){
+            $.ajax({
+                type: 'GET',
+                url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
+                success: function (response) {
+                    console.log(response)
+                    document.querySelector('input[type="search"]').value = '';
+                    setProduct(response)
+                    bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+                },
+            })
+        } else{
+            $.ajax({
+                type: 'GET',
+                url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
+                success: function (response) {
+                    console.log(response)
+                    document.querySelector('input[type="search"]').value = '';
+                    setProduct(response)
+                    bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+                },
+            })
+        }
     }
 
     //空白鍵輸入執行搜尋
@@ -311,7 +328,6 @@
         item.addEventListener('click', (event) => {
             const value = event.target.getAttribute('data-value');
             categorysearch(value);
-
         });
     });
 
