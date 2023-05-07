@@ -58,14 +58,13 @@ function getCategories() {
 function setCategories(response) {
   const categories = response
   const categoryMenuEl = $('#categoryMenu')
-
   categoryMenuEl.empty()
   categoryMenuEl.append(`
       <li><a class="dropdown-item" onclick="selectCategory()">ALL</a></li>
     `)
   for (const category of categories) {
     categoryMenuEl.append(`
-      <li><a class="dropdown-item" onclick="selectCategory(this)">${category}</a></li>
+      <li><a class="dropdown-item" onclick="selectCategory(this)">${gameType[category]}</a></li>
     `)
   }
 }
@@ -89,6 +88,7 @@ function setProduct(response) {
   cardsEl.empty()
 
   products.map((product) => {
+    console.log(product)
     cardsEl.append(`
     <div class="col">
       <div id="${
@@ -133,9 +133,7 @@ function redirectProductPage(divEl) {
 
 function setPages(response) {
   const totalPage = response.totalPages
-
   const pagesEl = $('#pages')
-
   pagesEl.empty()
 
   pagesEl.append(`
@@ -195,48 +193,21 @@ function queryPage(button) {
 }
 
 function selectCategory(anchor) {
+  console.log(anchor)
   if (anchor === undefined) {
     $('#categoryBtn').text('ALL')
-    category = ''
+    categorysearch(' ');
   } else {
     $('#categoryBtn').text(anchor.innerText)
     category = anchor.innerText
   }
-  categorysearch(category);
+  let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
+  categorysearch(categoryKey);
 }
-
-//底部位置
-const bottomElement = document.documentElement;
-
-function keysearch() {
-  const searchValue = document.querySelector('input[type="search"]').value;
-  console.log(searchValue + "keysearch")
-  $.ajax({
-    type: 'GET',
-    url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
-    success: function (response) {
-      console.log(response)
-      setProduct(response)
-      setPages(response)
-      document.querySelector('input[type="search"]').value = '';
-      bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
-    },
-  })
-}
-
-//空白鍵輸入執行搜尋
-const searchInput = document.getElementById('search-input');
-searchInput.addEventListener('keydown', (event) => {
-  if (event.keyCode === 13) {
-    keysearch();
-  }
-});
 
 // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
 function categorysearch(category){
   const searchValue = document.querySelector('input[type="search"]').value
-  console.log(searchValue + "categoryearch")
-  console.log(searchValue)
   if ( searchValue !== ''){
     $.ajax({
       type: 'GET',
@@ -263,3 +234,30 @@ function categorysearch(category){
     })
   }
 }
+
+//底部位置
+const bottomElement = document.documentElement;
+
+function keysearch() {
+  const searchValue = document.querySelector('input[type="search"]').value;
+  $.ajax({
+    type: 'GET',
+    url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
+    success: function (response) {
+      console.log(response)
+      setProduct(response)
+      setPages(response)
+      document.querySelector('input[type="search"]').value = '';
+      bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+    },
+  })
+}
+
+//空白鍵輸入執行搜尋
+const searchInput = document.getElementById('search-input');
+searchInput.addEventListener('keydown', (event) => {
+  if (event.keyCode === 13) {
+    keysearch();
+  }
+});
+
