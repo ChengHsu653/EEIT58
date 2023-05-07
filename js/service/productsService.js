@@ -202,4 +202,64 @@ function selectCategory(anchor) {
     $('#categoryBtn').text(anchor.innerText)
     category = anchor.innerText
   }
+  categorysearch(category);
+}
+
+//底部位置
+const bottomElement = document.documentElement;
+
+function keysearch() {
+  const searchValue = document.querySelector('input[type="search"]').value;
+  console.log(searchValue + "keysearch")
+  $.ajax({
+    type: 'GET',
+    url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
+    success: function (response) {
+      console.log(response)
+      setProduct(response)
+      setPages(response)
+      document.querySelector('input[type="search"]').value = '';
+      bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+    },
+  })
+}
+
+//空白鍵輸入執行搜尋
+const searchInput = document.getElementById('search-input');
+searchInput.addEventListener('keydown', (event) => {
+  if (event.keyCode === 13) {
+    keysearch();
+  }
+});
+
+// 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
+function categorysearch(category){
+  const searchValue = document.querySelector('input[type="search"]').value
+  console.log(searchValue + "categoryearch")
+  console.log(searchValue)
+  if ( searchValue !== ''){
+    $.ajax({
+      type: 'GET',
+      url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
+      success: function (response) {
+        console.log(response)
+        setProduct(response)
+        setPages(response)
+        document.querySelector('input[type="search"]').value = '';
+        bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+      },
+    })
+  } else{
+    $.ajax({
+      type: 'GET',
+      url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
+      success: function (response) {
+        console.log(response)
+        setProduct(response)
+        setPages(response)
+        document.querySelector('input[type="search"]').value = '';
+        bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
+      },
+    })
+  }
 }

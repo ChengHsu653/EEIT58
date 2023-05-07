@@ -190,13 +190,13 @@
                     <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         依分類搜索
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item" data-value="SURVIVAL">生存</a></li>
-                        <li><a class="dropdown-item" data-value="FPS">射擊</a></li>
-                        <li><a class="dropdown-item" data-value="GAME_THEORY">博弈</a></li>
-                        <li><a class="dropdown-item" data-value="LEISURE">休閒</a></li>
-                        <li><a class="dropdown-item" data-value="FANTASY">奇幻</a></li>
-                        <li><a class="dropdown-item" data-value="RHYTHM_GAME">音樂遊戲</a></li>
+                    <ul id="categoryMenu" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+<!--                        <li><a class="dropdown-item" data-value="SURVIVAL">生存</a></li>-->
+<!--                        <li><a class="dropdown-item" data-value="FPS">射擊</a></li>-->
+<!--                        <li><a class="dropdown-item" data-value="GAME_THEORY">博弈</a></li>-->
+<!--                        <li><a class="dropdown-item" data-value="LEISURE">休閒</a></li>-->
+<!--                        <li><a class="dropdown-item" data-value="FANTASY">奇幻</a></li>-->
+<!--                        <li><a class="dropdown-item" data-value="RHYTHM_GAME">音樂遊戲</a></li>-->
                     </ul>
                 </div>
 
@@ -261,77 +261,6 @@
     var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
         return new bootstrap.Popover(popoverTriggerEl)
     })
-
-    //底部位置
-    const bottomElement = document.documentElement;
-
-    function keysearch() {
-        const searchValue = document.querySelector('input[type="search"]').value;
-        console.log(searchValue)
-        $.ajax({
-            type: 'GET',
-            url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
-            success: function (response) {
-                console.log(response)
-                setProduct(response)
-                setPages(response)
-                document.querySelector('input[type="search"]').value = '';
-                bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
-            },
-        })
-    }
-
-    // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
-    function categorysearch(category){
-        const searchValue = document.querySelector('input[type="search"]').value
-        console.log(searchValue)
-        if ( searchValue !== ''){
-            $.ajax({
-                type: 'GET',
-                url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
-                success: function (response) {
-                    console.log(response)
-                    setProduct(response)
-                    setPages(response)
-                    document.querySelector('input[type="search"]').value = '';
-                    bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
-                },
-            })
-        } else{
-            $.ajax({
-                type: 'GET',
-                url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
-                success: function (response) {
-                    console.log(response)
-                    setProduct(response)
-                    setPages(response)
-                    document.querySelector('input[type="search"]').value = '';
-                    bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
-                },
-            })
-        }
-    }
-
-    //空白鍵輸入執行搜尋
-    const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('keydown', (event) => {
-        if (event.keyCode === 13) {
-            keysearch();
-        }
-    });
-
-    //抓取下拉式選單的值
-    const dropdownItems = document.querySelectorAll('.dropdown-item');
-    dropdownItems.forEach((item) => {
-        item.addEventListener('click', (event) => {
-            const value = event.target.getAttribute('data-value');
-            categorysearch(value);
-        });
-    });
-
-
-
-
 </script>
 </body>
 </html>
