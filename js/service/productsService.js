@@ -135,7 +135,6 @@ function setPages(response) {
   const totalPage = response.totalPages
   const pagesEl = $('#pages')
   pagesEl.empty()
-
   pagesEl.append(`
     <li id="previous" class="page-item">
       <a class="page-link page-previous" style="background-color: #fff; font-size:24px; color: #000; cursor: pointer; px-2" onclick="queryPreviousOrNext(${
@@ -196,8 +195,7 @@ function selectCategory(anchor) {
   console.log(anchor)
   if (anchor === undefined) {
     $('#categoryBtn').text('ALL')
-    category = ' '
-    let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
+    category = ''
     categorySearch(category);
   } else {
     $('#categoryBtn').text(anchor.innerText)
@@ -211,14 +209,15 @@ function selectCategory(anchor) {
 // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
 function categorySearch(category){
   const searchValue = document.querySelector('input[type="search"]').value
-  if ( searchValue !== ' '){
+  if ( searchValue !== ''){
     $.ajax({
       type: 'GET',
-      url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
+      url: serverUrl + `/api/products?page=1&size=${size}&search=${searchValue}&category=${category}`,
       success: function (response) {
         console.log(response)
         setProduct(response)
         setPages(response)
+        page = 1
         document.querySelector('input[type="search"]').value = '';
         bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
       },
@@ -226,11 +225,12 @@ function categorySearch(category){
   } else{
     $.ajax({
       type: 'GET',
-      url: serverUrl + `/api/products?page=${page}&size=${size}&category=${category}`,
+      url: serverUrl + `/api/products?page=1&size=${size}&category=${category}`,
       success: function (response) {
         console.log(response)
         setProduct(response)
         setPages(response)
+        page = 1
         document.querySelector('input[type="search"]').value = '';
         bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
       },
@@ -245,11 +245,12 @@ function keySearch() {
   const searchValue = document.querySelector('input[type="search"]').value;
   $.ajax({
     type: 'GET',
-    url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}`,
+    url: serverUrl + `/api/products?page=1&size=${size}&search=${searchValue}`,
     success: function (response) {
       console.log(response)
       setProduct(response)
       setPages(response)
+      page = 1
       document.querySelector('input[type="search"]').value = '';
       bottomElement.scrollTop = bottomElement.scrollHeight - bottomElement.clientHeight;
     },
