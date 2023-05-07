@@ -196,19 +196,22 @@ function selectCategory(anchor) {
   console.log(anchor)
   if (anchor === undefined) {
     $('#categoryBtn').text('ALL')
-    categorysearch(' ');
+    category = ' '
+    let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
+    categorySearch(category);
   } else {
     $('#categoryBtn').text(anchor.innerText)
     category = anchor.innerText
+    let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
+    categorySearch(categoryKey);
   }
-  let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
-  categorysearch(categoryKey);
+
 }
 
 // 分類搜尋 若關鍵字搜尋欄位中有值 加進來一起判斷 沒有就只搜尋分類
-function categorysearch(category){
+function categorySearch(category){
   const searchValue = document.querySelector('input[type="search"]').value
-  if ( searchValue !== ''){
+  if ( searchValue !== ' '){
     $.ajax({
       type: 'GET',
       url: serverUrl + `/api/products?page=${page}&size=${size}&search=${searchValue}&category=${category}`,
@@ -238,7 +241,7 @@ function categorysearch(category){
 //底部位置
 const bottomElement = document.documentElement;
 
-function keysearch() {
+function keySearch() {
   const searchValue = document.querySelector('input[type="search"]').value;
   $.ajax({
     type: 'GET',
@@ -257,7 +260,7 @@ function keysearch() {
 const searchInput = document.getElementById('search-input');
 searchInput.addEventListener('keydown', (event) => {
   if (event.keyCode === 13) {
-    keysearch();
+    keySearch();
   }
 });
 
