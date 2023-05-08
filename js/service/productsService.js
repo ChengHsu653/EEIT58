@@ -194,13 +194,15 @@ function queryPage(button) {
 function selectCategory(anchor) {
   console.log(anchor)
   if (anchor === undefined) {
-    $('#categoryBtn').text('ALL')
+    $('#categoryBtn').text('全部')
     category = ''
+    document.getElementById("categoryName").innerText = "ALL";
     categorySearch(category);
   } else {
     $('#categoryBtn').text(anchor.innerText)
     category = anchor.innerText
     let categoryKey = Object.keys(gameType).find(key => gameType[key] === category)
+    document.getElementById("categoryName").innerText = gameType[categoryKey];
     categorySearch(categoryKey);
   }
 
